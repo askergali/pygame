@@ -11,6 +11,7 @@ FPS = 30
 clock = pygame.time.Clock()
 size = WIDTH, HEIGHT = 288, 512
 screen = pygame.display.set_mode(size)
+pygame.display.set_caption('Flappy Bird')
 running = True
 rule_group = pygame.sprite.Group()
 lose_group = pygame.sprite.Group()
@@ -43,7 +44,6 @@ def main():
     global SCREEN, FPSCLOCK
     FPSCLOCK = pygame.time.Clock()
     SCREEN = pygame.display.set_mode(size)
-    pygame.display.set_caption('Flappy Bird')
 
     IMAGES['start_screen'] = pygame.image.load('data/start_screen.png').convert_alpha()
 
