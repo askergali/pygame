@@ -32,7 +32,8 @@ PLAYERS = (
     ))
 
 BACKGROUNDS = (
-    'data/background-day.png'
+    'data/background-day.png',
+    'data/background-night.png'
 )
 
 PIPES = (
@@ -40,7 +41,7 @@ PIPES = (
 )
 
 
-def main():
+def main1():
     global SCREEN, FPSCLOCK
     FPSCLOCK = pygame.time.Clock()
     SCREEN = pygame.display.set_mode(size)
@@ -62,7 +63,7 @@ def main():
     SOUNDS['wing'] = pygame.mixer.Sound('data/wing' + soundExt)
 
     while True:
-        IMAGES['background'] = pygame.image.load(BACKGROUNDS).convert()
+        IMAGES['background'] = pygame.image.load(BACKGROUNDS[0]).convert()
 
         IMAGES['player'] = (
             pygame.image.load(PLAYERS[0]),
@@ -90,6 +91,59 @@ def main():
         movementInfo = showWelcomeAnimation()
         crashInfo = mainGame(movementInfo)
         showGameOverScreen(crashInfo)
+
+
+def main2():
+    global SCREEN, FPSCLOCK
+    FPSCLOCK = pygame.time.Clock()
+    SCREEN = pygame.display.set_mode(size)
+
+    IMAGES['start_screen'] = pygame.image.load('data/start_screen.png').convert_alpha()
+
+    IMAGES['ground'] = pygame.image.load('data/ground.png').convert_alpha()
+
+    # sounds
+    if 'win' in sys.platform:
+        soundExt = '.wav'
+    else:
+        soundExt = '.ogg'
+
+    SOUNDS['die'] = pygame.mixer.Sound('data/die' + soundExt)
+    SOUNDS['hit'] = pygame.mixer.Sound('data/hit' + soundExt)
+    SOUNDS['point'] = pygame.mixer.Sound('data/point' + soundExt)
+    SOUNDS['swoosh'] = pygame.mixer.Sound('data/swoosh' + soundExt)
+    SOUNDS['wing'] = pygame.mixer.Sound('data/wing' + soundExt)
+
+    while True:
+        IMAGES['background'] = pygame.image.load(BACKGROUNDS[1]).convert()
+
+        IMAGES['player'] = (
+            pygame.image.load(PLAYERS[0]),
+            pygame.image.load(PLAYERS[1]),
+            pygame.image.load(PLAYERS[2])
+        )
+
+        IMAGES['pipe'] = (
+            pygame.transform.rotate(
+                pygame.image.load(PIPES).convert_alpha(), 180),
+            pygame.image.load(PIPES).convert_alpha(),
+        )
+
+        HITMASKS['pipe'] = (
+            getHitmask(IMAGES['pipe'][0]),
+            getHitmask(IMAGES['pipe'][1]),
+        )
+
+        HITMASKS['player'] = (
+            getHitmask(IMAGES['player'][0]),
+            getHitmask(IMAGES['player'][1]),
+            getHitmask(IMAGES['player'][2]),
+        )
+
+        movementInfo = showWelcomeAnimation()
+        crashInfo = mainGame(movementInfo)
+        showGameOverScreen(crashInfo)
+
 
 
 def showWelcomeAnimation():
@@ -520,7 +574,7 @@ class ExitButton(pygame.sprite.Sprite):
 def game_screen():
     screen = pygame.display.set_mode(size)
     running = True
-    intro_text = ["Easy", "Hard", "Back"]
+    intro_text = ["Day", "Night", "Back"]
     screen.fill((0, 0, 0))
     background = pygame.transform.scale(load_image('fon.jpeg'), (WIDTH, HEIGHT))
     screen.blit(background, (0, 0))
@@ -545,13 +599,13 @@ def game_screen():
                     back_button.kill()
                     easy_button.kill()
                     hard_button.kill()
-                    main()
+                    main1()
                 elif hard_button.check_click(event.pos):
                     print("clicked")
                     back_button.kill()
                     easy_button.kill()
                     hard_button.kill()
-                    main()
+                    main2()
 
         all_sprites.update()
         pygame.display.flip()
@@ -628,12 +682,12 @@ def records():
     SCORES = scores_read.split()
 
     if len(SCORES) == 0:
-        high_score = 0
+        records_screen(0)
     else:
         high_scores = sorted(SCORES, key=int, reverse=True)
         high_score = high_scores[0]
 
-    records_screen(high_score)
+        records_screen(high_score)
 
 
 def records_screen(high_score):
