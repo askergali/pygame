@@ -596,7 +596,7 @@ def lose_screen(score):
     screen.blit(background, (0, 0))
     font = pygame.font.Font(None, 50)
     text = font.render(str(score), 1, (255, 255, 255))
-
+    f.write(str(score) + " ")
     screen.blit(text, (130, 100))
     back_button = BackButton(120, 50, intro_text[0], 16, 215)
     again_button = AgainButton(120, 50, intro_text[1], 152, 215)
